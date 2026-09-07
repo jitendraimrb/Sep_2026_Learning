@@ -1,0 +1,81 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  # ============================
+  # 🔥 Redis Configuration
+  # ============================
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  cloud:
+    gateway:
+
+      # ============================
+      # 🔍 Eureka Discovery Locator
+      # ============================
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      # ============================
+      # 🚦 Gateway Routes
+      # ============================
+      routes:
+
+        # --------------------------------
+        # 🚀 SERVICE‑1 (via Eureka)
+        # --------------------------------
+        - id: service1-route
+          uri: lb://service1
+          predicates:
+            - Path=/service1/**
+          filters:
+            - StripPrefix=1
+
+        # --------------------------------
+        # 🚀 SERVICE‑2 (via Eureka)
+        # --------------------------------
+        - id: service2-route
+          uri: lb://service2
+          predicates:
+            - Path=/service2/**
+          filters:
+            - StripPrefix=1
+
+        # --------------------------------
+        # 🚀 Rate‑Limited Route Example
+        # --------------------------------
+        - id: service1-rate-limit
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/service1/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5      # 5 requests per second
+                redis-rate-limiter.burstCapacity: 10     # max burst
+
+# ============================
+# 🔧 Logging (Optional but Recommended)
+# ============================
+logging:
+  level:
+    org.springframework.cloud.gateway.filter.ratelimit: DEBUG
+    org.springframework.cloud.gateway: INFO
+
+# ============================
+# 📊 Actuator Endpoints
+# ============================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: gateway,health,info
