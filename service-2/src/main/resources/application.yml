@@ -18,3 +18,23 @@ management:
   endpoint:
     health:
       show-details: always
+
+# -------------------------------
+# OpenTelemetry Configuration
+# -------------------------------
+otel:
+  exporter:
+    otlp:
+      endpoint: http://localhost:4317   # OTLP Collector endpoint
+
+opentelemetry:
+  traces:
+    exporter: otlp
+  metrics:
+    exporter: otlp
+  logs:
+    exporter: otlp
+
+logging:
+  pattern:
+    level: "%5p [correlationId=%X{correlationId}]"

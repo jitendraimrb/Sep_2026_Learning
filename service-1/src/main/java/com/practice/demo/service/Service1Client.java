@@ -35,6 +35,7 @@ public class Service1Client {
 
     // WebFlux → Reactive pipeline built on WebClient + Reactor operators
     public Mono<String> callService2UsingWebFlux() {
+    	
         return webClient.get()
                 .uri("http://service2/api/message/hello")   // Eureka service name
                 .retrieve()

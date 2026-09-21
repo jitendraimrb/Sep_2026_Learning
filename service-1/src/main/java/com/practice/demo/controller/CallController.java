@@ -1,7 +1,9 @@
 package com.practice.demo.controller;
 
-import java.util.concurrent.CompletableFuture;
 
+import java.util.concurrent.CompletableFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +19,13 @@ public class CallController {
 
     @Autowired
     private Service1Client service1Client;
+    
+    private static final Logger log = LoggerFactory.getLogger(CallController.class);
+
 
     @GetMapping("/service2-web-client")
     public CompletableFuture<String> callService2() {
+    	log.info("Service1 received request for calling Service endpoint.............");
         return service1Client.callService2();
     }
     

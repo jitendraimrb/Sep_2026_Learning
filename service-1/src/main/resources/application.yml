@@ -29,3 +29,23 @@ resilience4j:
     instances:
       service2CB:
         timeout-duration: 2s
+
+# -------------------------------
+# OpenTelemetry Configuration
+# -------------------------------
+otel:
+  exporter:
+    otlp:
+      endpoint: http://localhost:4317   # OTLP Collector endpoint
+
+opentelemetry:
+  traces:
+    exporter: otlp
+  metrics:
+    exporter: otlp
+  logs:
+    exporter: otlp
+
+logging:
+  pattern:
+    level: "%5p [correlationId=%X{correlationId}]"
