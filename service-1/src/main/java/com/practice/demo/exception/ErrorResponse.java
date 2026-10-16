@@ -1,0 +1,9 @@
+package com.practice.demo.exception;
+
+import java.time.LocalDateTime;
+
+public record ErrorResponse(
+        String errorCode,
+        String message,
+        LocalDateTime timestamp) {
+}
